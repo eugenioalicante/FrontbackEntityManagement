@@ -62,7 +62,7 @@
         				<div class="modal-container">
 							<div class="modal-header">
             					<slot name="header">
-              						default header
+              						
             					</slot>
           					</div>
           					<div class="modal-body">
@@ -74,11 +74,11 @@
 										</li>
 									</ul>
 									</p>			 
-									<form @submit.prevent="submit">					
+									<form @submit.prevent="submit">														
 										<strong>
 											Nombre
 										</strong>
-										<input type="text" v-model="name" class="form-control"> 
+										<input type="text" v-model="name" class="form-control"> 									
 										<strong>
 											Grupo
 										</strong>
@@ -86,7 +86,15 @@
 											<option value="1">
 												Grupo 1
 											</option>							
-										</select>	
+										</select>									
+										<strong>
+											Pais
+										</strong>						
+										<select id="idPais" name="idPais" v-model="idPais" class="custom-select">
+											<option value="1">
+												España
+											</option>							
+										</select>			
 										<strong>
 											Provincia
 										</strong>						
@@ -101,11 +109,15 @@
 										<input type="text" v-model="city" class="form-control"> 
 										<strong>
 											Código Postal
-										</strong>						
-										<input type="text" v-model="postalCode" class="form-control"> 
+										</strong>
+										<input type="text" v-model="postalCode" class="form-control"> 										
+										<strong>
+											Dirección
+										</strong>
+										<input type="text" v-model="adress" class="form-control"> 																
 										<strong>
 											Teléfono
-										</strong>
+										</strong>										
 										<input type="text" v-model="telephone" class="form-control"> 
 										<strong>
 											Email
@@ -114,11 +126,7 @@
 										<strong>
 											Logo
 										</strong>
-										<input type="text" v-model="logo" class="form-control"> 
-										<strong>
-											Activo
-										</strong>
-										<input type="text" v-model="active" class="form-control"> 						
+										<input type="text" v-model="logo" class="form-control"> 														
 										<div class="modal-footer">
 											<slot name="footer">     						
 												<button class="modal-default-button" @click="$emit('close')">
