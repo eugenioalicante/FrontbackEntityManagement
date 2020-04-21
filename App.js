@@ -7,7 +7,7 @@ new Vue({
 	},
 	created: function() {
 		var that = this;				
-		axios.get('https://localhost:44378/api/Entity', {
+		axios.get('http://bankentitymanagement.azurewebsites.net/api/Entity', {
 			headers: {
 				'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.LRk3GRkNBlJn0DFVo5g58l9MPAdYpCQe1sddNVmGgzY'												    
 			}
@@ -71,7 +71,7 @@ Vue.component('modal', {
 				};				
 			}
 			else {
-				axios.post('https://localhost:44378/api/Entity', { 
+				axios.post('http://bankentitymanagement.azurewebsites.net/api/Entity', { 
 					name: this.name,
 					idEntityGroup: this.idEntityGroup,
 					idProvince: this.idProvince,
