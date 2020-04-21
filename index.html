@@ -24,27 +24,27 @@
 		  		<thead>
 					<tr>
 						<th scope="col">Nombre</th>
+						<th scope="col">Grupo</th>
 						<th scope="col">Pais</th>
 						<th scope="col">Provincia</th>
 						<th scope="col">Localidad</th>
 						<th scope="col">Código Postal</th>
 						<th scope="col">Teléfono</th>
 						<th scope="col">Email</th>
-						<th scope="col">Logo</th>
-						<th scope="col">Grupo</th>			  
+						<th scope="col">Logo</th>									  
 					</tr>
 		  		</thead>
 		  		<tbody>
 					<tr v-for="(item,index) in entidades" :key="index">
 						<td scope="row">{{item.name}}</td>
+						<td scope="row">{{item.entityGroup.name}}</td>
 						<td scope="row">{{item.country}}</td>
 						<td scope="row">{{item.province}}</td>
 						<td scope="row">{{item.city}}</td>
 						<td scope="row">{{item.postalCode}}</td>
 						<td scope="row">{{item.telephone}}</td>
 						<td scope="row">{{item.email}}</td>
-						<td scope="row">{{item.logo}}</td>
-						<td scope="row">{{item.entityGroup.name}}</td>			  
+						<td scope="row"><img v-bind:src="item.logo" alt="imagen" width="120" height="80" ></td>									  
 					</tr>   
 		  		</tbody>
 			</table>
