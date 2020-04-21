@@ -1,298 +1,143 @@
 <!DOCTYPE html>
+
 <html>
-<head>
-	<meta charset="utf-8">
-	<title> Vue.js </title>
+	<head>
+		<meta charset="utf-8">
+		<title>Bank Entity Management</title>
+		<link rel="stylesheet" type="text/css" href="content/modal.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	</head>
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<body>
+		<div id="app" class="container">			
 
-</head>
-<body>
-
-	
-
-	<div id="app" class="container">		
-	
-	 <button id="show-modal" @click="showModal = true"  class="btn btn-primary" >Añadir Entidad</button>
-	  <!-- use the modal component, pass in the prop -->
-	  <modal v-if="showModal" @close="showModal = false">
-		<!--
-		  you can use custom content here to overwrite
-		  default content
-		-->
-		<h3 slot="header">Añadir Entidad</h3>
-	  </modal>
-			
-		
-		<table class="table">
-		  <thead>
-			<tr>
-				<th scope="col">Nombre</th>
-				<th scope="col">Pais</th>
-				<th scope="col">Provincia</th>
-				<th scope="col">Localidad</th>
-				<th scope="col">Código Postal</th>
-				<th scope="col">Teléfono</th>
-				<th scope="col">Email</th>
-				<th scope="col">Logo</th>
-				<th scope="col">Grupo</th>			  
-			</tr>
-		  </thead>
-		  <tbody>
-			<tr v-for="(item,index) in entidades" :key="index">
-				<td scope="row">{{item.name}}</td>
-				<td scope="row">{{item.country}}</td>
-				<td scope="row">{{item.province}}</td>
-				<td scope="row">{{item.city}}</td>
-				<td scope="row">{{item.postalCode}}</td>
-				<td scope="row">{{item.telephone}}</td>
-				<td scope="row">{{item.email}}</td>
-				<td scope="row">{{item.logo}}</td>
-				<td scope="row">{{item.entityGroup.name}}</td>			  
-			</tr>   
-		  </tbody>
-		</table>		
-	</div>
-
-	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-	<script>	
-		new Vue({
-			el: '#app',
-			data: {				
-				entidades : [],
-				showModal: false,
-				name : ''
-			},
-			created: function(){
-				var that = this;				
-				axios.get('http://bankentitymanagement.azurewebsites.net/api/Entity',
-				{
-						headers: 
-						{
-							'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.LRk3GRkNBlJn0DFVo5g58l9MPAdYpCQe1sddNVmGgzY'							
-					    }
-					}				
-				)
-				.then(function (response) {
-					that.entidades = response.data;
-				})
-				.catch(function (error) {
-					console.log(error);
-				})			   
-			}
-		});	
-		
-	
-
-		// register modal component
-		Vue.component('modal', {
-		  template: '#modal-template',
-		  data() {		   
-			return {
-              name: '',             
-		      idEntityGroup: '',
-			  idProvince: '',
-			  city: '',
-		      postalCode: '',
-	          telephone: '',
-	          email: '',
-              logo: '',
-              active: '',
-			  errors: [],
-            };
-			},
-		   methods : {
-			  submit(e){
-				this.errors = [];
-				
-				if (!this.name) {
-									 				 
-				  if (!this.name) {
-					this.errors.push('El nombre es obligatorio.');
-				  }
-			  }
-			  else
-			  {
-				axios.post('https://localhost:44378/api/Entity', 
-					{ 
-					  name: this.name,
-					  idEntityGroup: this.idEntityGroup,
-					  idProvince: this.idProvince,
-					  city: this.city,
-					  postalCode: this.postalCode,
-					  telephone: this.telephone,
-					  email: this.email,
-					  logo: this.logo,
-					  active: this.active,
-						},
-					{
-						headers: 
-						{
-							'Accept': 'application/json',
-							'Content-Type': 'application/json',
-							'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
-					    }
-					}
-					)
-				  .then(res => {
-				     
-					  axios.get('https://localhost:44320/api/Entity')
-							.then(function (response) {
-									  this.entidades = response.data;																	
-									 									 
-							});	
-
-						this.$emit('close');							
-				  })
-				  .catch(function (error) {
-					console.log(error);					
-				})	
-				}
-		   }
-		   }
-		})
-	
-
-	</script>
-	
-	<script type="text/x-template" id="modal-template">
-  <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
-
-          <div class="modal-header">
-            <slot name="header">
-              default header
-            </slot>
-          </div>
-
-          <div class="modal-body">
-            <slot name="body">
-             
-				<p v-if="errors.length">				
-				<ul>
-				  <li v-for="error in errors">{{ error }}</li>
-				</ul>
-			  </p>
-			 
-				<form @submit.prevent="submit">
+	 		<button id="show-modal" @click="showModal = true"  class="btn btn-primary" >
+				 Añadir Entidad
+			</button>			
+			<modal v-if="showModal" @close="showModal = false">		
+				<h3 slot="header">
+					Añadir Entidad
+				</h3>
+			</modal>
 					
-						<strong>Nombre:</strong>
-						<input type="text" v-model="name" class="form-control"> 
-						<strong>Grupo:</strong>
-						<select id="idEntityGroup" name="idEntityGroup" v-model="idEntityGroup" class="custom-select">
-							<option value="1">Grupo 1</option>							
-						</select>	
-						<strong>Provincia:</strong>						
-						<select id="idProvince" name="idProvince" v-model="idProvince" class="custom-select">
-							<option value="1">Alicante</option>							
-						</select>						
-						<strong>Población:</strong>						
-						<input type="text" v-model="city" class="form-control"> 
-						<strong>Código Postal:</strong>						
-						<input type="text" v-model="postalCode" class="form-control"> 
-						<strong>Teléfono</strong>
-						<input type="text" v-model="telephone" class="form-control"> 
-						<strong>Email</strong>
-						<input type="text" v-model="email" class="form-control"> 
-						<strong>Logo</strong>
-						<input type="text" v-model="logo" class="form-control"> 
-						<strong>Activo</strong>
-						<input type="text" v-model="active" class="form-control"> 
-						
-					  <div class="modal-footer">
-						<slot name="footer">     						
-						   <button class="modal-default-button" @click="$emit('close')">
-							Cerrar
-						   </button>
-						  <button class="modal-default-button" type="submit">
-							Añadir
-						  </button>
-						</slot>
-					  </div>											
+			<table class="table">
+		  		<thead>
+					<tr>
+						<th scope="col">Nombre</th>
+						<th scope="col">Pais</th>
+						<th scope="col">Provincia</th>
+						<th scope="col">Localidad</th>
+						<th scope="col">Código Postal</th>
+						<th scope="col">Teléfono</th>
+						<th scope="col">Email</th>
+						<th scope="col">Logo</th>
+						<th scope="col">Grupo</th>			  
+					</tr>
+		  		</thead>
+		  		<tbody>
+					<tr v-for="(item,index) in entidades" :key="index">
+						<td scope="row">{{item.name}}</td>
+						<td scope="row">{{item.country}}</td>
+						<td scope="row">{{item.province}}</td>
+						<td scope="row">{{item.city}}</td>
+						<td scope="row">{{item.postalCode}}</td>
+						<td scope="row">{{item.telephone}}</td>
+						<td scope="row">{{item.email}}</td>
+						<td scope="row">{{item.logo}}</td>
+						<td scope="row">{{item.entityGroup.name}}</td>			  
+					</tr>   
+		  		</tbody>
+			</table>
 					
-				</form>
-			
-            </slot>
-          </div>
+		</div>
 
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script type="text/javascript" src="./App.js"></script>		
 
-        </div>
-      </div>
-    </div>
-  </transition>
-</script>
-
-<style>
-.modal-mask {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, .5);
-  display: table;
-  transition: opacity .3s ease;
-}
-
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.modal-container {
-  width: 400px;
-  margin: 0px auto;
-  padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-  transition: all .3s ease;
-  font-family: Helvetica, Arial, sans-serif;
-}
-
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
-}
-
-.modal-body {
-  margin: 20px 0;
-}
-
-.modal-default-button {
-  float: right;
-}
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
-.modal-enter {
-  opacity: 0;
-}
-
-.modal-leave-active {
-  opacity: 0;
-}
-
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
-}
-</style>
-
-</body>
+		<script type="text/x-template" id="modal-template">	
+			<transition name="modal">
+    			<div class="modal-mask">
+      				<div class="modal-wrapper">
+        				<div class="modal-container">
+							<div class="modal-header">
+            					<slot name="header">
+              						default header
+            					</slot>
+          					</div>
+          					<div class="modal-body">
+            					<slot name="body">									
+									<p v-if="errors.length">				
+									<ul>
+										<li v-for="error in errors">
+											{{ error }}
+										</li>
+									</ul>
+									</p>			 
+									<form @submit.prevent="submit">					
+										<strong>
+											Nombre
+										</strong>
+										<input type="text" v-model="name" class="form-control"> 
+										<strong>
+											Grupo
+										</strong>
+										<select id="idEntityGroup" name="idEntityGroup" v-model="idEntityGroup" class="custom-select">
+											<option value="1">
+												Grupo 1
+											</option>							
+										</select>	
+										<strong>
+											Provincia
+										</strong>						
+										<select id="idProvince" name="idProvince" v-model="idProvince" class="custom-select">
+											<option value="1">
+												Alicante
+											</option>							
+										</select>						
+										<strong>
+											Población
+										</strong>						
+										<input type="text" v-model="city" class="form-control"> 
+										<strong>
+											Código Postal
+										</strong>						
+										<input type="text" v-model="postalCode" class="form-control"> 
+										<strong>
+											Teléfono
+										</strong>
+										<input type="text" v-model="telephone" class="form-control"> 
+										<strong>
+											Email
+										</strong>
+										<input type="text" v-model="email" class="form-control"> 
+										<strong>
+											Logo
+										</strong>
+										<input type="text" v-model="logo" class="form-control"> 
+										<strong>
+											Activo
+										</strong>
+										<input type="text" v-model="active" class="form-control"> 						
+										<div class="modal-footer">
+											<slot name="footer">     						
+												<button class="modal-default-button" @click="$emit('close')">
+													Cerrar
+												</button>
+												<button class="modal-default-button" type="submit">
+													Añadir
+												</button>
+											</slot>
+										</div>																
+									</form>			
+            					</slot>
+          					</div>
+        				</div>
+      				</div>
+    			</div>
+  			</transition>	
+		</script>
+	</body>
 </html>
 
 
