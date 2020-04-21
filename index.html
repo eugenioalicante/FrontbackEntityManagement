@@ -13,7 +13,7 @@
 
 	<div id="app" class="container">		
 	
-	 <button id="show-modal" @click="showModal = true">Añadir Entidad</button>
+	 <button id="show-modal" @click="showModal = true"  class="btn btn-primary" >Añadir Entidad</button>
 	  <!-- use the modal component, pass in the prop -->
 	  <modal v-if="showModal" @close="showModal = false">
 		<!--
@@ -67,7 +67,14 @@
 			},
 			created: function(){
 				var that = this;				
-				axios.get('https://localhost:44320/api/Entity')
+				axios.get('http://bankentitymanagement.azurewebsites.net/api/Entity',
+				{
+						headers: 
+						{
+							'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.LRk3GRkNBlJn0DFVo5g58l9MPAdYpCQe1sddNVmGgzY'							
+					    }
+					}				
+				)
 				.then(function (response) {
 					that.entidades = response.data;
 				})
@@ -108,7 +115,7 @@
 			  }
 			  else
 			  {
-				axios.post('https://localhost:44320/api/Entity', 
+				axios.post('https://localhost:44378/api/Entity', 
 					{ 
 					  name: this.name,
 					  idEntityGroup: this.idEntityGroup,
@@ -165,8 +172,7 @@
           <div class="modal-body">
             <slot name="body">
              
-				<p v-if="errors.length">
-				<b>Por favor, corrija el(los) siguiente(s) error(es):</b>
+				<p v-if="errors.length">				
 				<ul>
 				  <li v-for="error in errors">{{ error }}</li>
 				</ul>
