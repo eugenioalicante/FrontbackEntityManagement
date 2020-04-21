@@ -11,9 +11,12 @@
 	<body>
 		<div id="app" class="container">			
 
-	 		<button id="show-modal" @click="showModal = true"  class="btn btn-primary" >
-				 Añadir Entidad
-			</button>			
+			<div class="buttonAddEntity">
+				<button id="show-modal" @click="showModal = true"  class="btn btn-primary" >
+					Añadir Entidad
+				</button>
+			</div>
+
 			<modal v-if="showModal" @close="showModal = false">		
 				<h3 slot="header">
 					Añadir Entidad
@@ -44,7 +47,7 @@
 						<td scope="row">{{item.postalCode}}</td>
 						<td scope="row">{{item.telephone}}</td>
 						<td scope="row">{{item.email}}</td>
-						<td scope="row"><img v-bind:src="item.logo" alt="imagen" width="120" height="80" ></td>									  
+						<td scope="row"><img v-bind:src="item.logo" alt="imagen" width="100" height="60" ></td>									  
 					</tr>   
 		  		</tbody>
 			</table>
