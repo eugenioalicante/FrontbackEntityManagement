@@ -43,7 +43,7 @@ Vue.component('modal', {
 	methods : {
 		submit(e) {
 			this.errors = [];	
-			if (!this.name || !this.idEntityGroup || !this.idProvince || !this.telephone || !this.email || !idPais) {						
+			if (!this.name || !this.idEntityGroup || !this.idProvince || !this.telephone || !this.email || !this.idPais) {						
 				this.errorBool = false;
 				if (!this.name && !this.errorBool) {
 					this.errors.push('El nombre es obligatorio.');
